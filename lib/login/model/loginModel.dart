@@ -1,7 +1,9 @@
 class LoginModel {
   bool _isLogin;
 
-  LoginModel(this._isLogin);
+  LoginModel(this._isLogin){
+    print('bbbbb');
+  }
 
   bool get isLogin => _isLogin;
 

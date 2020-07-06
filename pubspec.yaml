@@ -32,6 +32,7 @@ dependencies:
   oktoast: ^2.3.2
   http: ^0.12.1
   dio: ^3.0.9
+  shared_preferences: ^0.5.7
 
 dev_dependencies:
   flutter_test:

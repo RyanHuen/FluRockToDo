@@ -1,4 +1,5 @@
 import 'package:rocktodo/bean/common/token.dart';
+import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class CommonConfig {
@@ -9,8 +10,10 @@ class CommonConfig {
   }
 
   static onAppForegroundPreTask() async {
-    RockNet rockNet = RockNet();
-    rockNet.initConfig(domain: 'http://localhost:80/');
+    RockNet rockNet = initNetWorkComponent();
+    LoginManager loginManager = LoginManager();
+    bool login = await loginManager.init();
+    print('already login : start to Home'+login.toString());
     await executeTokenFetch(rockNet);
   }
 
@@ -20,5 +23,11 @@ class CommonConfig {
         csrfToken = value.token;
       }
     });
+  }
+
+  static RockNet initNetWorkComponent() {
+    RockNet rockNet = RockNet();
+    rockNet.initConfig(domain: 'http://localhost:80/');
+    return rockNet;
   }
 }

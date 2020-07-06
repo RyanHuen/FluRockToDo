@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:rocktodo/bean/common/user_info.dart';
+import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class Login extends StatefulWidget {
@@ -81,15 +82,16 @@ class _LoginWidgetState extends State<Login> {
                         'username': username,
                         'password': password
                       }).then((value) {
-                        value = UserInfo.fromJson(value);
-                        if (value == null) {
-                          showToast("value null");
+                        UserInfo userInfo = UserInfo.fromJson(value);
+                        if (userInfo == null) {
+                          showToast("登录失败");
                         } else {
-                          showToast(value.toString());
+                          LoginManager loginManager = LoginManager();
+                          loginManager.updateUserInfo(userInfo);
+                          showToast("登陆成功");
                         }
                       }).catchError((e) {
-                        print(e.toString());
-                        showToast("exception");
+                        showToast("登录失败");
                       });
                     },
                   ),
