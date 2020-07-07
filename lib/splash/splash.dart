@@ -45,6 +45,7 @@ class _SplashWidgetState extends State<Splash> {
 
   @override
   void initState() {
+    super.initState();
     _loadConfig();
   }
 
