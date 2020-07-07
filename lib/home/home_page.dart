@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -7,7 +6,17 @@ class Home extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeWidgetState();
 }
 
-class _HomeWidgetState extends State<Home> {
+class _HomeWidgetState extends State<Home> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+  List tabs = ["ToDo", "Blog", "ToBe..."];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController = TabController(length: tabs.length, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +36,25 @@ class _HomeWidgetState extends State<Home> {
             );
           },
         ),
+        bottom: TabBar(
+            controller: _tabController,
+            tabs: tabs
+                .map((e) => Tab(
+                      text: e,
+                    ))
+                .toList()),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: tabs.map((e) {
+          return Container(
+            alignment: Alignment.center,
+            child: Text(
+              e,
+              textScaleFactor: 5,
+            ),
+          );
+        }).toList(),
       ),
     );
   }
