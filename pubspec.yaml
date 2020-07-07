@@ -33,6 +33,7 @@ dependencies:
   http: ^0.12.1
   dio: ^3.0.9
   shared_preferences: ^0.5.7
+  logger: ^0.9.1
 
 dev_dependencies:
   flutter_test:

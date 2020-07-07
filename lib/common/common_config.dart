@@ -1,9 +1,11 @@
+import 'package:logger/logger.dart';
 import 'package:rocktodo/bean/common/token.dart';
 import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class CommonConfig {
   static var csrfToken = '';
+  static bool login = false;
 
   static Future init() async {
     await onAppForegroundPreTask();
@@ -12,8 +14,9 @@ class CommonConfig {
   static onAppForegroundPreTask() async {
     RockNet rockNet = initNetWorkComponent();
     LoginManager loginManager = LoginManager();
-    bool login = await loginManager.init();
-    print('already login : start to Home'+login.toString());
+    login = await loginManager.init();
+    var logger = Logger();
+    logger.d('CommonConfig: login status: ' + login.toString());
     await executeTokenFetch(rockNet);
   }
 
@@ -27,7 +30,7 @@ class CommonConfig {
 
   static RockNet initNetWorkComponent() {
     RockNet rockNet = RockNet();
-    rockNet.initConfig(domain: 'http://localhost:80/');
+    rockNet.initConfig(domain: 'http://10.2.8.235:80/');
     return rockNet;
   }
 }

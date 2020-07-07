@@ -89,6 +89,7 @@ class _LoginWidgetState extends State<Login> {
                           LoginManager loginManager = LoginManager();
                           loginManager.updateUserInfo(userInfo);
                           showToast("登陆成功");
+                          Navigator.pushReplacementNamed(context, '/home');
                         }
                       }).catchError((e) {
                         showToast("登录失败");

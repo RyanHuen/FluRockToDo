@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:rocktodo/common/common_config.dart';
+import 'package:rocktodo/common/theme.dart';
 import 'package:rocktodo/login/login_manager.dart';
 
 class Splash extends StatefulWidget {
@@ -8,19 +11,40 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashWidgetState extends State<Splash> {
-  bool login;
+  bool _login = false;
+  bool _checked = false;
 
   @override
   Widget build(BuildContext context) {
-    print('return builde');
     return Container(
-      child: Text('欢迎页面'),
+      color: Colors.white,
+      child: Expanded(
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'RockToDo',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 28.0,
+                    color: appTheme.primaryColor,
+                    decoration: TextDecoration.none,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   @override
   void initState() {
-    print('gogogog');
     _loadConfig();
   }
 
@@ -29,13 +53,16 @@ class _SplashWidgetState extends State<Splash> {
 
     setState(() {
       LoginManager loginManager = LoginManager();
-      login = loginManager.login;
-      if(login){
-        print('已登录 去首页');
-        Navigator.pushReplacementNamed(context, '/home');
-      }else{
-        print('没登录，去登陆');
-        Navigator.pushReplacementNamed(context, '/login');
+      _login = loginManager.login;
+      _checked = true;
+      var logger = Logger();
+      logger.d('Splash: login status: ' + _login.toString());
+      if (_checked) {
+        if (_login) {
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
       }
     });
   }
