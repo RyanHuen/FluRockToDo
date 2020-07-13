@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:rocktodo/bean/common/user_info.dart';
+import 'package:rocktodo/common/common_config.dart';
 import 'package:rocktodo/login/login_manager.dart';
+import 'package:rocktodo/net/net_work_error.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class Login extends StatefulWidget {
@@ -39,7 +41,8 @@ class _LoginWidgetState extends State<Login> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: '请输入邮箱',
+                  hintText: "用户名或邮箱",
+                  prefixIcon: Icon(Icons.email),
                 ),
                 controller: _emailController,
               ),
@@ -52,7 +55,8 @@ class _LoginWidgetState extends State<Login> {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  hintText: '请输入密码',
+                  hintText: "您的登录密码",
+                  prefixIcon: Icon(Icons.lock),
                 ),
                 controller: _passwordController,
                 obscureText: true,
@@ -69,6 +73,14 @@ class _LoginWidgetState extends State<Login> {
                     onPressed: () async {
                       String username = _emailController.text;
                       String password = _passwordController.text;
+                      if (!CommonConfig.inProduction) {
+                        if (username.isEmpty) {
+                          username = 'ryanhuen';
+                        }
+                        if (password.isEmpty) {
+                          password = 'ryansimple1001';
+                        }
+                      }
                       if (username.isEmpty) {
                         showToast("请输入用户名");
                         return;
@@ -78,7 +90,7 @@ class _LoginWidgetState extends State<Login> {
                         return;
                       }
                       RockNet rockNet = RockNet();
-                      rockNet.post(path: 'rest_api/api_auth/', params: {
+                      rockNet.post(path: 'rest_api/api_auth', params: {
                         'username': username,
                         'password': password
                       }).then((value) {
@@ -92,7 +104,11 @@ class _LoginWidgetState extends State<Login> {
                           Navigator.pushReplacementNamed(context, '/home');
                         }
                       }).catchError((e) {
-                        showToast("登录失败");
+                        if (e is NetWorkError) {
+                          showToast(e.message);
+                        } else {
+                          showToast("登录失败");
+                        }
                       });
                     },
                   ),

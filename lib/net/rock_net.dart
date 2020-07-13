@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
+import 'package:rocktodo/bean/common/base_response.dart';
 import 'package:rocktodo/net/net_work_error.dart';
 
 class RockNet {
@@ -38,6 +40,13 @@ class RockNet {
       _engine.options = BaseOptions();
       _engine.options.connectTimeout = DEFAULT_CONNECT_TIMEOUT;
       _engine.options.receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
+      (_engine.httpClientAdapter as DefaultHttpClientAdapter)
+          .onHttpClientCreate = (client) {
+        client.findProxy = (uri) {
+          //proxy all request
+          return "PROXY 10.2.8.235:8888";
+        };
+      };
     }
   }
 
@@ -89,10 +98,16 @@ class RockNet {
     int receiveTimeout,
   }) async {
     try {
-      Response response =
-          await engine.post(path, data: json.encode(params));
+      Response response = await engine.post(path, data: json.encode(params));
       if (response != null) {
-        return response.data;
+        var result = jsonDecode(response.toString());
+        BaseResponse baseResponse = BaseResponse.fromJson(result);
+        if (baseResponse.statusCode == 0) {
+          return baseResponse.data;
+        } else {
+          return Future.error(
+              NetWorkError(baseResponse.statusCode, baseResponse.msg));
+        }
       } else {
         return Future.error(NetWorkError(
             NetWorkError.CODE_NULL_RESPONSE, NetWorkError.MSG_NULL_RESPONSE));

@@ -8,7 +8,7 @@ class Home extends StatefulWidget {
 
 class _HomeWidgetState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List tabs = ["ToDo", "Blog", "ToBe..."];
+  List tabs = ["ToDo", "Blog", "To Be Continued..."];
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _HomeWidgetState extends State<Home> with SingleTickerProviderStateMixin {
             alignment: Alignment.center,
             child: Text(
               e,
-              textScaleFactor: 5,
+              textScaleFactor: 3,
             ),
           );
         }).toList(),

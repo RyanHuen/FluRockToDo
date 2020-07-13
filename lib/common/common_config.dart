@@ -6,6 +6,7 @@ import 'package:rocktodo/net/rock_net.dart';
 class CommonConfig {
   static var csrfToken = '';
   static bool login = false;
+  static const bool inProduction = const bool.fromEnvironment("dart.vm.product");
 
   static Future init() async {
     await onAppForegroundPreTask();
