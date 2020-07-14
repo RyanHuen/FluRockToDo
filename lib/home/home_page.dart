@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:rocktodo/todo/set_list.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,6 +10,25 @@ class Home extends StatefulWidget {
 class _HomeWidgetState extends State<Home> with SingleTickerProviderStateMixin {
   TabController _tabController;
   List tabs = ["ToDo", "Blog", "To Be Continued..."];
+  List<Widget> widgets = [
+    ToDoSetListWidget(),
+    Container(
+      alignment: Alignment.center,
+      child: Text(
+        "Blog",
+        textScaleFactor: 3,
+      ),
+    ),
+    Container(
+      alignment: Alignment.center,
+      child: Text(
+        "To Be Continued...",
+        textScaleFactor: 3,
+      ),
+    )
+  ];
+
+  int currentIndex;
 
   @override
   void initState() {
@@ -37,25 +57,25 @@ class _HomeWidgetState extends State<Home> with SingleTickerProviderStateMixin {
           },
         ),
         bottom: TabBar(
-            controller: _tabController,
-            tabs: tabs
-                .map((e) => Tab(
-                      text: e,
-                    ))
-                .toList()),
+          controller: _tabController,
+          tabs: tabs
+              .map((e) => Tab(
+                    text: e,
+                  ))
+              .toList(),
+          onTap: onTap,
+        ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: tabs.map((e) {
-          return Container(
-            alignment: Alignment.center,
-            child: Text(
-              e,
-              textScaleFactor: 3,
-            ),
-          );
-        }).toList(),
+        children: widgets,
       ),
     );
+  }
+
+  void onTap(int value) {
+    setState(() {
+      currentIndex = value;
+    });
   }
 }

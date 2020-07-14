@@ -56,8 +56,10 @@ class _SplashWidgetState extends State<Splash> {
       LoginManager loginManager = LoginManager();
       _login = loginManager.login;
       _checked = true;
-      var logger = Logger();
-      logger.d('Splash: login status: ' + _login.toString());
+      if (!CommonConfig.inProduction) {
+        var logger = Logger();
+        logger.d('Splash: login status: ' + _login.toString());
+      }
       if (_checked) {
         if (_login) {
           Navigator.pushReplacementNamed(context, '/home');

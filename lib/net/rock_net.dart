@@ -4,6 +4,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rocktodo/bean/common/base_response.dart';
+import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/net_work_error.dart';
 
 class RockNet {
@@ -47,6 +48,8 @@ class RockNet {
           return "PROXY 10.2.8.235:8888";
         };
       };
+      _engine.interceptors.add(InterceptorsWrapper(
+          onRequest: (RequestOptions options) => requestInterceptor(options)));
     }
   }
 
@@ -96,9 +99,14 @@ class RockNet {
     Map<String, dynamic> params,
     int connectTimeout,
     int receiveTimeout,
+    bool token = true,
   }) async {
     try {
-      Response response = await engine.post(path, data: json.encode(params));
+      Response response = await engine.post(
+        path,
+        data: json.encode(params),
+        options: Options(headers: {"auth_token": true}),
+      );
       if (response != null) {
         var result = jsonDecode(response.toString());
         BaseResponse baseResponse = BaseResponse.fromJson(result);
@@ -121,6 +129,25 @@ class RockNet {
             NetWorkError(NetWorkError.CODE_UNKNOWN, NetWorkError.MSG_UNKNOWN),
             e);
       }
+    }
+  }
+
+  requestInterceptor(RequestOptions options) {
+    if (options.headers.containsKey("auth_token")) {
+      //remove the auxiliary header
+      options.headers.remove("auth_token");
+
+      LoginManager loginManager = LoginManager();
+      var authToken = '';
+      if (loginManager.login) {
+        authToken = loginManager.userInfo.token;
+      }
+
+      if (authToken.isNotEmpty) {
+        options.headers.addAll({"Authorization": "Token $authToken"});
+      }
+
+      return options;
     }
   }
 }

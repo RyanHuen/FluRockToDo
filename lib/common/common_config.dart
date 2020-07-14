@@ -17,7 +17,9 @@ class CommonConfig {
     LoginManager loginManager = LoginManager();
     login = await loginManager.init();
     var logger = Logger();
-    logger.d('CommonConfig: login status: ' + login.toString());
+    if (!CommonConfig.inProduction) {
+      logger.d('CommonConfig: login status: ' + login.toString());
+    }
     await executeTokenFetch(rockNet);
   }
 
