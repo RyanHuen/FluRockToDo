@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:rocktodo/bean/todo/set/todo_set.dart';
+import 'package:rocktodo/common/theme.dart';
 import 'package:rocktodo/net/rock_net.dart';
+import 'package:rocktodo/todo/todo_item_list.dart';
 
 class ToDoSetListWidget extends StatefulWidget {
   @override
@@ -14,15 +16,6 @@ class ToDoSetListWidget extends StatefulWidget {
 class _ToDoSetListState extends State<ToDoSetListWidget>
     with AutomaticKeepAliveClientMixin {
   List<ToDoSet> _toDoSetList = List();
-  List<Color> _colorList = [
-    Colors.red[300],
-    Colors.orange[300],
-    Colors.yellow[300],
-    Colors.green[300],
-    Colors.cyan[300],
-    Colors.blue[300],
-    Colors.purple[300],
-  ];
 
   @override
   void initState() {
@@ -47,18 +40,28 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
           },
           slivers: <Widget>[
             SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                return Container(
-                  width: 60.0,
-                  height: 60.0,
-                  child: Center(
-                    child: Text(
-                      _toDoSetList[index].name,
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context)=> ToDoItemListWidget(todoSetId: _toDoSetList[index].id,)
+                      ));
+                    },
+                    child: Container(
+                      width: 60.0,
+                      height: 60.0,
+                      child: Center(
+                        child: Text(
+                          _toDoSetList[index].name,
+                        ),
+                      ),
+                      color: appItemColors[index % 7],
                     ),
-                  ),
-                  color: _colorList[index % 7],
-                );
-              }, childCount: _toDoSetList.length),
+                  );
+                },
+                childCount: _toDoSetList.length,
+              ),
             ),
           ]),
     );

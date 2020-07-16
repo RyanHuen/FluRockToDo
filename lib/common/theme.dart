@@ -11,3 +11,13 @@ final appTheme = ThemeData(
     ),
   ),
 );
+
+final List<Color> appItemColors = [
+  Colors.red[300],
+  Colors.orange[300],
+  Colors.yellow[300],
+  Colors.green[300],
+  Colors.cyan[300],
+  Colors.blue[300],
+  Colors.purple[300],
+];

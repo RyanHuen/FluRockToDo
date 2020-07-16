@@ -32,7 +32,6 @@ class _HomeWidgetState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _tabController = TabController(length: tabs.length, vsync: this);
   }
