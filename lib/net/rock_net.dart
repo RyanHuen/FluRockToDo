@@ -4,6 +4,7 @@ import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:rocktodo/bean/common/base_response.dart';
+import 'package:rocktodo/common/common_config.dart';
 import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/net_work_error.dart';
 
@@ -45,7 +46,7 @@ class RockNet {
           .onHttpClientCreate = (client) {
         client.findProxy = (uri) {
           //proxy all request
-          return "PROXY 10.2.8.235:8888";
+          return "PROXY " + CommonConfig.domain + ":8888";
         };
       };
       _engine.interceptors.add(InterceptorsWrapper(

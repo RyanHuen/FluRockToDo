@@ -38,7 +38,13 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
       padding: EdgeInsets.all(2.0),
       child: EasyRefresh.custom(
           enableControlFinishRefresh: false,
-          onRefresh: _refresh,
+          onRefresh: () async {
+            await Future.delayed(Duration(seconds: 2), () {
+              if (mounted) {
+                _initDatas();
+              }
+            });
+          },
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
@@ -58,21 +64,7 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
     );
   }
 
-  /*ListView.separated(
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    _toDoSetList[index].name,
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) => Divider(
-                height: .0,
-              ),
-              itemCount: _toDoSetList.length)*/
-
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   void _initDatas() {
@@ -90,11 +82,5 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
     }).catchError((e) {
       _toDoSetList = List();
     });
-  }
-
-  Future<void> _refresh() async {
-    _toDoSetList.clear();
-    await _initDatas();
-    return;
   }
 }

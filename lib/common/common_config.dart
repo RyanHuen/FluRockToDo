@@ -4,9 +4,11 @@ import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class CommonConfig {
+  static var domain = '10.2.8.243';
   static var csrfToken = '';
   static bool login = false;
-  static const bool inProduction = const bool.fromEnvironment("dart.vm.product");
+  static const bool inProduction =
+      const bool.fromEnvironment("dart.vm.product");
 
   static Future init() async {
     await onAppForegroundPreTask();
@@ -33,7 +35,7 @@ class CommonConfig {
 
   static RockNet initNetWorkComponent() {
     RockNet rockNet = RockNet();
-    rockNet.initConfig(domain: 'http://10.2.8.235:80/');
+    rockNet.initConfig(domain: 'http://' + domain + ':80/');
     return rockNet;
   }
 }
