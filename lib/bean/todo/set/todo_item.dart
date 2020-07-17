@@ -77,4 +77,9 @@ class ToDoItem {
     data['sort'] = this.sort;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'ToDoItem{todoItemId: $todoItemId, createTimestamp: $createTimestamp, modifyTimestamp: $modifyTimestamp, notifyTimestamp: $notifyTimestamp, state: $state, comment: $comment, note: $note, sort: $sort}';
+  }
 }

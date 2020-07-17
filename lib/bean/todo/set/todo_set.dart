@@ -29,4 +29,20 @@ class ToDoSet {
     data['createTimestamp'] = this.createTimestamp;
     return data;
   }
+
+  String parseDisplayTime() {
+    DateTime time = DateTime.parse(createTimestamp);
+    String display = time.year.toString() +
+        "年" +
+        time.month.toString() +
+        "月" +
+        time.day.toString() +
+        "日 " +
+        time.hour.toString() +
+        "-" +
+        time.minute.toString() +
+        "-" +
+        time.second.toString();
+    return display;
+  }
 }

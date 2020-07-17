@@ -42,21 +42,82 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context)=> ToDoItemListWidget(todoSetId: _toDoSetList[index].id,)
-                      ));
-                    },
-                    child: Container(
-                      width: 60.0,
-                      height: 60.0,
-                      child: Center(
-                        child: Text(
-                          _toDoSetList[index].name,
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        left: 10,
+                        top: 15,
+                        right: 10,
+                        bottom: index == _toDoSetList.length - 1 ? 15 : 0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ToDoItemListWidget(
+                                      todoSetId: _toDoSetList[index].id,
+                                    )));
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: appItemColors[index % 7],
+                            boxShadow: [
+                              BoxShadow(
+                                offset: Offset(3, 1),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                color: appItemColors[index % 7],
+                              ),
+                            ]),
+                        height: 80.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                child: Align(
+                                  child: Text(
+                                    _toDoSetList[index].name,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFF061B28)),
+                                  ),
+                                  alignment: Alignment.topLeft,
+                                ),
+                                padding: EdgeInsets.only(
+                                    left: 15, top: 10, bottom: 0, right: 0),
+                              ),
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Text(
+                                  _toDoSetList[index].belongEmail,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: 0, top: 0, bottom: 5, right: 20),
+                                  child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Text(
+                                      _toDoSetList[index].parseDisplayTime(),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                            )
+                          ],
                         ),
                       ),
-                      color: appItemColors[index % 7],
                     ),
                   );
                 },

@@ -5,6 +5,7 @@ import 'package:oktoast/oktoast.dart';
 import 'package:rocktodo/bean/todo/set/todo_item.dart';
 import 'package:rocktodo/common/common_config.dart';
 import 'package:rocktodo/common/theme.dart';
+import 'package:rocktodo/detail/item_detail.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class ToDoItemListWidget extends StatefulWidget {
@@ -63,15 +64,26 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
             slivers: <Widget>[
               SliverList(
                 delegate: SliverChildBuilderDelegate((context, index) {
-                  return Container(
-                    width: 60.0,
-                    height: 60.0,
-                    child: Center(
-                      child: Text(
-                        _toDoItemList[index].comment,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ToDoItemDetailWidget(
+                            todoItemId: _toDoItemList[index].todoItemId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 50.0,
+                      child: Center(
+                        child: Text(
+                          _toDoItemList[index].comment,
+                        ),
                       ),
+                      color: appItemColors[index % 7],
                     ),
-                    color: appItemColors[index % 7],
                   );
                 }, childCount: _toDoItemList.length),
               ),
