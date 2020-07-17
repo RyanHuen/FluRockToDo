@@ -1,12 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:logger/logger.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:rocktodo/bean/todo/set/todo_item.dart';
-import 'package:rocktodo/common/common_config.dart';
 import 'package:rocktodo/common/theme.dart';
 import 'package:rocktodo/detail/item_detail.dart';
 import 'package:rocktodo/net/rock_net.dart';
+import 'package:rocktodo/util/time_util.dart';
 
 class ToDoItemListWidget extends StatefulWidget {
   final int todoSetId;
@@ -21,8 +22,13 @@ class ToDoItemListWidget extends StatefulWidget {
 
 class _ToDoItemListState extends State<ToDoItemListWidget> {
   final int todoSetId;
+  bool editing = false;
 
   ToDoList _toDoList = ToDoList();
+
+  ScrollController _scrollController = ScrollController();
+
+  bool showTopArea = true;
 
   _ToDoItemListState({@required this.todoSetId});
 
@@ -37,57 +43,201 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
   @override
   void initState() {
     super.initState();
-    if (!CommonConfig.inProduction) {
-      Logger logger = Logger();
-      logger.d('todoSetid透传:' + todoSetId.toString());
-    }
+    _scrollController.addListener(() {
+//      if (LogUtil.isLoggable()) {
+//        LogUtil.d(_scrollController.offset.toString());
+//      }
+
+//        if (_scrollController.offset < 1000 && showTopArea) {
+//          setState(() {
+//            showTopArea = false;
+//          });
+//        } else if (_scrollController.offset >= 1000 && showTopArea == false) {
+//          setState(() {
+//            showTopArea = true;
+//          });
+//        }
+    });
     _initDatas();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('RockToDo'),
+        title: Text(
+          _toDoList.name,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Container(
-        padding: EdgeInsets.all(2.0),
-        child: EasyRefresh.custom(
-            enableControlFinishRefresh: false,
-            onRefresh: () async {
-              await Future.delayed(Duration(seconds: 2), () {
-                if (mounted) {
-                  _initDatas();
-                }
-              });
-            },
-            slivers: <Widget>[
-              SliverList(
-                delegate: SliverChildBuilderDelegate((context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ToDoItemDetailWidget(
-                            todoItemId: _toDoItemList[index].todoItemId,
+        color: Colors.grey[200],
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: EasyRefresh(
+                enableControlFinishRefresh: false,
+                onRefresh: () async {
+                  await Future.delayed(Duration(milliseconds: 500), () {
+                    if (mounted) {
+                      _initDatas();
+                    }
+                  });
+                },
+                scrollController: _scrollController,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    // Add the app bar to the CustomScrollView.
+                    SliverAppBar(
+//                      leading: Icon(Icons.album),
+                      // Provide a standard title.
+//                      title: Text("title"),
+                      // Allows the user to reveal the app bar if they begin scrolling
+                      // back up the list of items.
+                      automaticallyImplyLeading: false,
+                      floating: true,
+                      // Display a placeholder widget to visualize the shrinking size.
+                      flexibleSpace: SingleChildScrollView(
+                        child: Container(
+                            child: Padding(
+                          padding:
+                              EdgeInsets.only(left: 10, top: 10, right: 10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.widgets,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    _toDoList.name,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      editing ? Icons.done : Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        editing = !editing;
+                                      });
+                                    },
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Text(
+                                  "创建时间： " +
+                                      TimeUtil.timeFormat(
+                                          _toDoList.createTimestamp),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      "是否启用： " +
+                                          TimeUtil.timeFormat(
+                                              _toDoList.createTimestamp),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Switch(
+                                        value: _toDoList.enable,
+                                        activeColor: Colors.green[500],
+                                        onChanged: (value) {
+                                          if (editing) {
+                                            setState(() {
+                                              _toDoList.enable = value;
+                                            });
+                                          }
+                                        })
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 50.0,
-                      child: Center(
-                        child: Text(
-                          _toDoItemList[index].comment,
-                        ),
+                        )),
                       ),
-                      color: appItemColors[index % 7],
+                      // Make the initial height of the SliverAppBar larger than normal.
+                      expandedHeight: 130,
                     ),
-                  );
-                }, childCount: _toDoItemList.length),
+                    // Next, create a SliverList
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              left: 10,
+                              right: 10,
+                              top: 15,
+                              bottom:
+                                  index == _toDoItemList.length - 1 ? 15 : 0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ToDoItemDetailWidget(
+                                    todoItemId: _toDoItemList[index].todoItemId,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: appItemColors[index % 7],
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(3, 1),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      color: appItemColors[index % 7],
+                                    ),
+                                  ]),
+                              height: 100.0,
+                              child: Center(
+                                child: Text(
+                                  _toDoItemList[index].comment,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }, childCount: _toDoItemList.length),
+                    ),
+                  ],
+                ),
               ),
-            ]),
+            )
+          ],
+        ),
       ),
     );
   }

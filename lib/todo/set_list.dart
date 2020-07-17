@@ -4,6 +4,7 @@ import 'package:rocktodo/bean/todo/set/todo_set.dart';
 import 'package:rocktodo/common/theme.dart';
 import 'package:rocktodo/net/rock_net.dart';
 import 'package:rocktodo/todo/todo_item_list.dart';
+import 'package:rocktodo/util/time_util.dart';
 
 class ToDoSetListWidget extends StatefulWidget {
   @override
@@ -19,7 +20,6 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initDatas();
   }
@@ -103,7 +103,8 @@ class _ToDoSetListState extends State<ToDoSetListWidget>
                                   child: Align(
                                     alignment: Alignment.bottomRight,
                                     child: Text(
-                                      _toDoSetList[index].parseDisplayTime(),
+                                      TimeUtil.timeFormat(
+                                          _toDoSetList[index].createTimestamp),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 12,

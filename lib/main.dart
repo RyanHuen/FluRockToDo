@@ -22,6 +22,9 @@ class MyApp extends StatelessWidget {
           Provider(create: (context) => LoginModel(checkLogin())),
         ],
         child: MaterialApp(
+          showSemanticsDebugger: false,
+          debugShowCheckedModeBanner: false,
+          debugShowMaterialGrid: false,
           title: 'Rock Todo',
           theme: appTheme,
           initialRoute: '/',
