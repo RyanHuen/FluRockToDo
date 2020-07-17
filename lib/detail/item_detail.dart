@@ -46,7 +46,11 @@ class _ToDoItemDetailState extends State<ToDoItemDetailWidget> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Text(_todoItem.toString()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("详情"),
+        ),
+      ),
     );
   }
 }
