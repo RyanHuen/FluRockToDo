@@ -26,10 +26,6 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
 
   ToDoList _toDoList = ToDoList();
 
-  ScrollController _scrollController = ScrollController();
-
-  bool showTopArea = true;
-
   _ToDoItemListState({@required this.todoSetId});
 
   List<ToDoItem> get _toDoItemList {
@@ -43,28 +39,7 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-//      if (LogUtil.isLoggable()) {
-//        LogUtil.d(_scrollController.offset.toString());
-//      }
-
-//        if (_scrollController.offset < 1000 && showTopArea) {
-//          setState(() {
-//            showTopArea = false;
-//          });
-//        } else if (_scrollController.offset >= 1000 && showTopArea == false) {
-//          setState(() {
-//            showTopArea = true;
-//          });
-//        }
-    });
     _initDatas();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.dispose();
   }
 
   @override
@@ -93,7 +68,6 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                     }
                   });
                 },
-                scrollController: _scrollController,
                 child: CustomScrollView(
                   slivers: <Widget>[
                     SliverAppBar(
@@ -154,9 +128,7 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                      "是否启用： " +
-                                          TimeUtil.timeFormat(
-                                              _toDoList.createTimestamp),
+                                      "是否启用：",
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
