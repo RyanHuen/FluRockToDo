@@ -1,3 +1,5 @@
+import 'package:rocktodo/util/log_util.dart';
+
 class ToDoList {
   String name;
   bool enable;
@@ -81,5 +83,37 @@ class ToDoItem {
   @override
   String toString() {
     return 'ToDoItem{todoItemId: $todoItemId, createTimestamp: $createTimestamp, modifyTimestamp: $modifyTimestamp, notifyTimestamp: $notifyTimestamp, state: $state, comment: $comment, note: $note, sort: $sort}';
+  }
+}
+
+class ToDoItemModel {
+  static const int STATE_WAIT_FINISH = 0;
+  static const int STATE_PROCESSING = 1;
+  static const int STATE_FINISHED = 2;
+
+  static List<bool> parseState(ToDoItem item) {
+    List<bool> result;
+    if (item == null) {
+      result = [false, false, false];
+    } else {
+      switch (item.state) {
+        case STATE_WAIT_FINISH:
+          result = [true, false, false];
+          break;
+        case STATE_PROCESSING:
+          result = [false, true, false];
+          break;
+        case STATE_FINISHED:
+          result = [false, false, true];
+          break;
+        default:
+          result = [false, false, false];
+          break;
+      }
+    }
+    if (LogUtil.isLoggable()) {
+      LogUtil.d("Item State: " + result.toString());
+    }
+    return result;
   }
 }

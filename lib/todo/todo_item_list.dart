@@ -96,16 +96,9 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                 scrollController: _scrollController,
                 child: CustomScrollView(
                   slivers: <Widget>[
-                    // Add the app bar to the CustomScrollView.
                     SliverAppBar(
-//                      leading: Icon(Icons.album),
-                      // Provide a standard title.
-//                      title: Text("title"),
-                      // Allows the user to reveal the app bar if they begin scrolling
-                      // back up the list of items.
                       automaticallyImplyLeading: false,
                       floating: true,
-                      // Display a placeholder widget to visualize the shrinking size.
                       flexibleSpace: SingleChildScrollView(
                         child: Container(
                             child: Padding(
@@ -185,10 +178,8 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                           ),
                         )),
                       ),
-                      // Make the initial height of the SliverAppBar larger than normal.
                       expandedHeight: 130,
                     ),
-                    // Next, create a SliverList
                     SliverList(
                       delegate: SliverChildBuilderDelegate((context, index) {
                         return Padding(
@@ -222,10 +213,67 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                                     ),
                                   ]),
                               height: 100.0,
-                              child: Center(
-                                child: Text(
-                                  _toDoItemList[index].comment,
-                                ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(left: 10, top: 10),
+                                        child: ToggleButtons(
+                                          isSelected: ToDoItemModel.parseState(
+                                            _toDoItemList[index],
+                                          ),
+                                          constraints: BoxConstraints(
+                                            maxWidth: 100,
+                                          ),
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.access_alarm,
+                                            ),
+                                            Icon(
+                                              Icons.schedule,
+                                            ),
+                                            Icon(
+                                              Icons.done,
+                                            )
+                                          ],
+                                          onPressed: (state) {
+                                            setState(() {
+                                              _toDoItemList[index].state =
+                                                  state;
+                                            });
+                                          },
+                                          color: Colors.black,
+                                          renderBorder: false,
+                                          borderColor: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                          selectedColor: Colors.white,
+                                          selectedBorderColor: Colors.white,
+                                          fillColor: Color(0x22757575),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        child: Text(
+                                          _toDoItemList[index].comment,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
