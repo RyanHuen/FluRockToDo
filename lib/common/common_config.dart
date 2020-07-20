@@ -1,12 +1,15 @@
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:rocktodo/bean/common/token.dart';
 import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/rock_net.dart';
 
 class CommonConfig {
-  static var domain = '10.2.8.243';
+  static var domain = 'https://ryanhuen.tech/';
+  static var proxy_domain = '10.2.8.243';
   static var csrfToken = '';
   static bool login = false;
+  static String signPem = '';
   static const bool inProduction =
       const bool.fromEnvironment("dart.vm.product");
 
@@ -14,7 +17,12 @@ class CommonConfig {
     await onAppForegroundPreTask();
   }
 
+  static Future<String> loadAsset() async {
+    return await rootBundle.loadString('assets/sign.key');
+  }
+
   static onAppForegroundPreTask() async {
+    signPem = await loadAsset();
     RockNet rockNet = initNetWorkComponent();
     LoginManager loginManager = LoginManager();
     login = await loginManager.init();
@@ -35,7 +43,7 @@ class CommonConfig {
 
   static RockNet initNetWorkComponent() {
     RockNet rockNet = RockNet();
-    rockNet.initConfig(domain: 'http://' + domain + ':80/');
+    rockNet.initConfig(domain: domain);
     return rockNet;
   }
 }

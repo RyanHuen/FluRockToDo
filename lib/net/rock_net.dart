@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
@@ -7,6 +8,7 @@ import 'package:rocktodo/bean/common/base_response.dart';
 import 'package:rocktodo/common/common_config.dart';
 import 'package:rocktodo/login/login_manager.dart';
 import 'package:rocktodo/net/net_work_error.dart';
+import 'package:rocktodo/util/log_util.dart';
 
 class RockNet {
   static const int DEFAULT_CONNECT_TIMEOUT = 10000;
@@ -42,15 +44,25 @@ class RockNet {
       _engine.options = BaseOptions();
       _engine.options.connectTimeout = DEFAULT_CONNECT_TIMEOUT;
       _engine.options.receiveTimeout = DEFAULT_RECEIVE_TIMEOUT;
-      (_engine.httpClientAdapter as DefaultHttpClientAdapter)
-          .onHttpClientCreate = (client) {
-        client.findProxy = (uri) {
-          //proxy all request
-          return "PROXY " + CommonConfig.domain + ":8888";
-        };
-      };
       _engine.interceptors.add(InterceptorsWrapper(
           onRequest: (RequestOptions options) => requestInterceptor(options)));
+      (_engine.httpClientAdapter as DefaultHttpClientAdapter)
+          .onHttpClientCreate = (client) {
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) {
+          LogUtil.d("cert pem : " + cert.pem);
+          LogUtil.d("self file pem : " + CommonConfig.signPem);
+          if (cert.pem == CommonConfig.signPem) {
+            // Verify the certificate
+            return true;
+          }
+          return false;
+        };
+        client.findProxy = (uri) {
+          //proxy all request
+          return "PROXY " + CommonConfig.proxy_domain + ":8888";
+        };
+      };
     }
   }
 
