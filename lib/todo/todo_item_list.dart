@@ -186,7 +186,8 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                                   ]),
                               height: 100.0,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Row(
@@ -203,10 +204,10 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                                           ),
                                           children: <Widget>[
                                             Icon(
-                                              Icons.access_alarm,
+                                              Icons.timer_off,
                                             ),
                                             Icon(
-                                              Icons.schedule,
+                                              Icons.timer,
                                             ),
                                             Icon(
                                               Icons.done,
@@ -245,6 +246,29 @@ class _ToDoItemListState extends State<ToDoItemListWidget> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                   ),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.build,
+                                          color: Colors.black,
+                                          size: 14,
+                                        ),
+                                        Text(
+                                          TimeUtil.timeFormat(
+                                              _toDoItemList[index]
+                                                  .modifyTimestamp),
+                                          style: TextStyle(fontSize: 14),
+                                          softWrap: false,
+                                          overflow: TextOverflow.clip,
+                                        )
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
